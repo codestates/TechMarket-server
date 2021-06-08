@@ -19,29 +19,7 @@ const corsOptions = {
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
-
-
-// TODO: express-session 라이브러리를 이용해 쿠키 설정을 해줄 수 있습니다.
-app.use(
-  session({
-    secret: '@codestates',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      domain: 'localhost',
-      path: '/',
-      maxAge: 24 * 6 * 60 * 10000,
-      sameSite: 'None',
-      httpOnly: true,
-      secure: true,
-    },
-  })
-);
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// TODO: CORS 설정이 필요합니다. 클라이언트가 어떤 origin인지에 따라 달리 설정할 수 있습니다.
+ 클라이언트가 어떤 origin인지에 따라 달리 설정할 수 있습니다.
 // 메서드는 GET, POST, OPTIONS를 허용합니다.
 //app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
