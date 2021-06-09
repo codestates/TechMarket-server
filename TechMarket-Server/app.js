@@ -17,10 +17,10 @@ app.use(
 );
 
 app.get('/', (req, res) => {
-  res.status(201).send('Hello World');
+  res.status(201).send('Hello! Welcome to Cmarket 👩🏼‍💻 🧑🏻‍💻 👨🏼‍💻 👨🏼‍💻');
 });
 
 app.listen(port, () => {
-  console.log(`서버가 ${port}번에서 작동중입니다.`);
+  console.log(`🌈 서버가 ${port}번에서 작동중입니다. 🌈`);
 });
 
