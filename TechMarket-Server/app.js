@@ -1,14 +1,17 @@
+require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
 //const jwt = require('jsonwebtoken');
 //const { authToken } = require('./middleware/token');
 //const db = require('./db/connection');
 
+const controllers = require("./controllers");
+
+
 const app = express();
 app.use(express.json());
 const port = 80;
 
-//테스트용 주석
 
 app.use(
   cors({
@@ -17,6 +20,7 @@ app.use(
   })
 );
 
+app.post("/user/login", controllers.logInController);
 
 app.get('/', (req, res) => {
   res.status(201).send('Hello World');
