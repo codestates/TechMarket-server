@@ -21,6 +21,7 @@ app.use(
 );
 
 app.post("/user/login", controllers.logInController);
+app.post("/user/signup", controllers.signUpController);
 
 app.get('/', (req, res) => {
   res.status(201).send('Hello World');
@@ -29,5 +30,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`서버가 ${port}번에서 작동중입니다.`);
 });
-
-//Dev 수정

@@ -11,7 +11,7 @@ module.exports = {
       });
 
       if (!userInfo) { //로그인 실패
-        res.status(404).send("Invalid user or Wrong password");
+        res.status(401).send("Invalid user or Wrong password");
       }
 
       else {
@@ -41,6 +41,34 @@ module.exports = {
         }
         res.status(200).json( response );
       }
+  },
+  signUpController: async (req, res) => {
+    //회원가입 로직 및 유저 생성 로직
+    //이미 가입된 회원
+    if(!(req.body.name && req.body.email && req.body.password)){
+      res.status(409).send('your account already exist');
+    }
+    
+    const userInfo = await user.findOne({ where: { email: req.body.email} });
+
+    if(userInfo === null){ //생성가능
+      
+      const newUser = await user.create({ username: req.body.username, email : req.body.email, password: req.body.password, deal_count : 0 });
+      let response = {  
+        id: newUser.id,
+        email: newUser.email,
+        password: newUser.password,
+        username: newUser.username,
+        deal_count: newUser.deal_count,
+        createdAt: newUser.created_time,
+        updatedAt: newUser.updated_time
+      }
+      res.status(201).json( response );
+
+    }
+    else{ //생성불가능
+      res.status(409).send('your account already exist');
+    }
   },
 };
 
