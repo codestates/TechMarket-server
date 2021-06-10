@@ -11,12 +11,13 @@ require("./models");
 
 const app = express();
 app.use(express.json());
-const port = 8080;
+const port = 80;
 
 
 app.use(
   cors({
-    
+    origin: true,
+    credentials: true
   })
 );
 
@@ -33,4 +34,4 @@ app.listen(port, () => {
   console.log(`서버가 ${port}번에서 작동중입니다.`);
 });
 
-//Dev 수정
+//06.10 ec2 - rds 연결확인
