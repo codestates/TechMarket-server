@@ -61,9 +61,11 @@ module.exports = {
   signUpController: async (req, res) => {
     //회원가입 로직 및 유저 생성 로직
     //이미 가입된 회원
+    /*
     if(!(req.body.name && req.body.email && req.body.password)){
       res.status(409).send('your account already exist');
     }
+    */
     
     const userInfo = await user.findOne({ where: { email: req.body.email} });
 
