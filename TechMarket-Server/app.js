@@ -23,6 +23,7 @@ app.use(
 
 
 app.post("/user/login", controllers.logInController);
+app.post("/user/signup", controllers.signUpController);
 app.post("/user/signout", controllers.signOutController);
 
 
