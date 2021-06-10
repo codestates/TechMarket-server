@@ -5,13 +5,14 @@ const cors = require('cors');
 //const db = require('./db/connection');
 
 const controllers = require("./controller");
+const boardcontroller = require("./controller/boardcontroller")
 require("./models");
 
 
 
 const app = express();
 app.use(express.json());
-const port = 80;
+const port = 8080;
 
 
 app.use(
@@ -25,6 +26,9 @@ app.use(
 app.post("/user/login", controllers.logInController);
 app.post("/user/signup", controllers.signUpController);
 app.post("/user/signout", controllers.signOutController);
+
+app.post("/mypage/upload", boardcontroller.uploadController);
+app.post("/mypage/deletecontent", boardcontroller.deleteController);
 
 
 app.get('/', (req, res) => {
