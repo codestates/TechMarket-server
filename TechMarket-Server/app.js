@@ -1,16 +1,17 @@
 const express = require('express');
 const cors = require('cors');
-//const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const https = require('https');
+const fs = require('fs');
 //const { authToken } = require('./middleware/token');
 //const db = require('./db/connection');
-
+const bodyParser = require("body-parser");
 const controllers = require("./controller");
 require("./models");
 
-
-
 const app = express();
 app.use(express.json());
+app.use(bodyParser.json());
 const port = 80;
 
 
@@ -28,11 +29,14 @@ app.post("/user/signout", controllers.signOutController);
 
 
 app.get('/', (req, res) => {
-  res.status(201).send('Hello World');
+  res.status(201).send('Hello World 🇰🇷');
 });
 
-app.listen(port, () => {
-  console.log(`서버가 ${port}번에서 작동중입니다.`);
+const server = https.createServer({
+      key: fs.readFileSync(__dirname + "/key.pem"),
+      cert: fs.readFileSync(__dirname + "/cert.pem"),
+    }, app)
+  .listen(port, () => {
+    console.log(`🔥 server listen in ${port} 🔥`);
 });
 
-//06.10 ec2 - rds 연결확인
