@@ -34,9 +34,9 @@ app.post("/user/login", controllers.logInController);
 app.post("/user/signup", controllers.signUpController);
 app.post("/user/signout", controllers.signOutController);
 
-app.post("/mypage/upload", boardcontroller.uploadController);
+//app.post("/mypage/upload", boardcontroller.uploadController);
 app.post("/mypage/deletecontent", boardcontroller.deleteController);
-app.post("/mypage/uploadimage", upload.array('photos') , imagecontroller.uploadImage);
+app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage);
 
 
 app.get('/', (req, res) => {
