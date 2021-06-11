@@ -40,6 +40,8 @@ app.post("/mypage/deletecontent", boardcontroller.deleteController);
 app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage);
 
 app.get("/search", searchcontroller.searchController );
+app.get("/showall", searchcontroller.showAllboard);
+app.get("/board", searchcontroller.showOneboard);
 
 
 app.get('/', (req, res) => {
@@ -53,3 +55,5 @@ app.listen(port, () => {
 //06.10 ec2 - rds 연결확인
 //0611 파일 업로드 확인
 //0611 검색기능 완료
+//0611 전체 글 목록 시작
+//0611 전체 글목록 , 글 하나 조회 완료

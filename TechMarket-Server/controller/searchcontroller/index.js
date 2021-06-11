@@ -8,8 +8,6 @@ const { photo } = require("../../models")
 //const jwt = require('jsonwebtoken'); //토큰 관련
 //const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET, { expiresIn: '14d', issuer: 'cotak' }); //토큰관련
 
-//사진!!! 같이 보내야함!!!!
-
 module.exports = {
   searchController: async (req, res) => {
 
@@ -47,8 +45,9 @@ module.exports = {
         }
         else{
           console.log('이미지 찾는중')
+          result[i].dataValues.filepath = [];
           for(let j = 0; j<filepath.length; j++){
-            result[i].dataValues.filepath = filepath[j].dataValues.filepath;
+            result[i].dataValues.filepath.push(filepath[j].dataValues.filepath);
             console.log(result[i]);
           }
         }
@@ -70,7 +69,50 @@ module.exports = {
         })
     }
     }
-
   },
+
+  showAllboard: async (req, res) => {
+    const allboard = await board.findAll();
+    if(allboard){
+      res.status(200).send(allboard);
+    }
+    else{
+      res.status(500).send("불러오기 실패");
+    }
+  },
+  showOneboard: async (req, res) => {
+    //게시글 클릭시 조회 하는 기능
+    if(req.body.id){
+      const oneboard = await board.findOne({ where : { id: req.body.id } });
+      if(oneboard){
+
+        let filepath = await photo.findAll({
+          where: {
+            boardid : oneboard.id
+          }
+        })
+        if(filepath.length === 0){
+          console.log("이미지가 없습니다.")
+        }
+        else{
+          console.log('이미지 찾는중')
+          oneboard.dataValues.filepath = [];
+          for(let j = 0; j<filepath.length; j++){
+            oneboard.dataValues.filepath.push(filepath[j].dataValues.filepath);
+            //console.log(allboard);
+          }
+
+        res.status(200).send(oneboard);
+      }
+    }
+      else{
+        res.status(200).send("없는 게시물")
+      }
+    }
+    else{
+      res.status(500).send("게시물 조회 실패")
+    }
+  },
+
 };
 
