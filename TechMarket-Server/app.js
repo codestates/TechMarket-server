@@ -11,6 +11,7 @@ const upload = multer({ dest: 'uploadedFiles/'});
 const controllers = require("./controller");
 const boardcontroller = require("./controller/boardcontroller")
 const imagecontroller = require("./controller/imagecontroller")
+const searchcontroller = require("./controller/searchcontroller")
 
 require("./models");
 
@@ -38,6 +39,8 @@ app.post("/user/signout", controllers.signOutController);
 app.post("/mypage/deletecontent", boardcontroller.deleteController);
 app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage);
 
+app.get("/search", searchcontroller.searchController );
+
 
 app.get('/', (req, res) => {
   res.status(201).send('Hello World');
@@ -49,3 +52,4 @@ app.listen(port, () => {
 
 //06.10 ec2 - rds 연결확인
 //0611 파일 업로드 확인
+//0611 검색기능 완료
