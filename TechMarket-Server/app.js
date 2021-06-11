@@ -14,7 +14,6 @@ app.use(express.json());
 app.use(bodyParser.json());
 const port = 80;
 
-
 app.use(
   cors({
     origin: true,
@@ -32,6 +31,7 @@ app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');
 });
 
+//이걸로도 https 프로토콜 전송이 안되면 다시 변경
 const server = https.createServer({
       key: fs.readFileSync(__dirname + "/key.pem"),
       cert: fs.readFileSync(__dirname + "/cert.pem"),
