@@ -30,18 +30,21 @@ app.use(
   })
 );
 
+//유저 정보 관련 - 토큰인증후 보완해야 함
+app.post("/user/login", controllers.logInController);     //로그인
+app.post("/user/signup", controllers.signUpController);   //회원가입
+app.post("/user/signout", controllers.signOutController); //로그아웃. 이름 바꾸는 것도 고려
+app.post("/user/modify", controllers.updateUserinfo);     //회원 정보 수정
 
-app.post("/user/login", controllers.logInController);
-app.post("/user/signup", controllers.signUpController);
-app.post("/user/signout", controllers.signOutController);
+//게시글 관련
+//app.post("/mypage/upload", boardcontroller.uploadController); //게시물 작성 아래 uploadImage에 통합
+app.post("/mypage/deletecontent", boardcontroller.deleteController); //게시물 삭제 
+app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage); //게시물 업로드(이미지 함께)
 
-//app.post("/mypage/upload", boardcontroller.uploadController);
-app.post("/mypage/deletecontent", boardcontroller.deleteController);
-app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage);
-
-app.get("/search", searchcontroller.searchController );
-app.get("/showall", searchcontroller.showAllboard);
-app.get("/board", searchcontroller.showOneboard);
+//
+app.get("/search", searchcontroller.searchController ); //글 검색
+app.get("/products", searchcontroller.showAllboard);    //전체 글 목록 불러오기(사진 제외)
+app.get("/board", searchcontroller.showOneboard);       //게시물 하나 조회
 
 
 app.get('/', (req, res) => {
