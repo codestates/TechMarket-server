@@ -34,13 +34,14 @@ app.use(
 app.post("/user/login", controllers.logInController);
 app.post("/user/signup", controllers.signUpController);
 app.post("/user/signout", controllers.signOutController);
+app.post("/user/modify", controllers.updateUserinfo);
 
 //app.post("/mypage/upload", boardcontroller.uploadController);
 app.post("/mypage/deletecontent", boardcontroller.deleteController);
 app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage);
 
 app.get("/search", searchcontroller.searchController );
-app.get("/showall", searchcontroller.showAllboard);
+app.get("/products", searchcontroller.showAllboard);
 app.get("/board", searchcontroller.showOneboard);
 
 
