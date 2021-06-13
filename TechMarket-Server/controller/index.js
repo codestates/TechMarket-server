@@ -37,7 +37,7 @@ module.exports = {
         deal_count: userInfo.deal_count,
       }
       
-      res.cookie('tech_auth', refreshToken).status(200).json({ 
+      res.status(200).json({ 
         response, 
         result: { 
           access_token: token
@@ -70,8 +70,8 @@ module.exports = {
       //받는 값 프론트분들과 얘기하면서 정하기
       else {
         //const tokenCheck = authorization.split(' ')[1];
-        //const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET);
-        const data = jwt.decode(tokenCheck);
+        const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET);
+        //const data = jwt.decode(tokenCheck);
         console.log(data);
 
         const userInfo = await user.findOne({
