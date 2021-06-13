@@ -14,6 +14,7 @@ const https = require('https');
 //const { authToken } = require('./middleware/token');
 //const db = require('./db/connection');
 const bodyParser = require("body-parser");
+
 const controllers = require("./controller");
 const boardcontroller = require("./controller/boardcontroller")
 const imagecontroller = require("./controller/imagecontroller")
@@ -27,9 +28,8 @@ const port = 8080;
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.json());
+app.use(express.static('uploadedFiles'));
 app.use(cookieParser());
-
 app.use(
   cors({
     origin: true,
@@ -47,11 +47,14 @@ app.post("/user/modify", controllers.updateUserinfo);     //회원 정보 수정
 //app.post("/mypage/upload", boardcontroller.uploadController); //게시물 작성 아래 uploadImage에 통합
 app.post("/mypage/deletecontent", boardcontroller.deleteController); //게시물 삭제 
 app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage); //게시물 업로드(이미지 함께)
+app.post("/comment/create", boardcontroller.createComment);    //댓글 작성하기
+app.post("/comment/delete", boardcontroller.deleteComment);    //댓글 삭제하기
 
 //
 app.get("/search", searchcontroller.searchController ); //글 검색
 app.get("/products", searchcontroller.showAllboard);    //전체 글 목록 불러오기(사진 제외)
 app.get("/board", searchcontroller.showOneboard);       //게시물 하나 조회
+
 app.get("/user/info", controllers.userInfoController)
 app.post("/user/login", controllers.logInController);
 app.post("/user/signup", controllers.signUpController);

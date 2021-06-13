@@ -45,14 +45,16 @@ module.exports = {
         }
         else{
           console.log('이미지 찾는중')
-          result[i].dataValues.filepath = [];
+          console.log(filepath);
+          result[i].dataValues.filename = [];
           for(let j = 0; j<filepath.length; j++){
-            result[i].dataValues.filepath.push(filepath[j].dataValues.filepath);
+            result[i].dataValues.filename.push(filepath[j].dataValues.filepath.substring(14,));
             console.log(result[i]);
+
+            
           }
         }
       }
-
       try {
         res.send({ //정보 넘김
             message: "검색결과",
@@ -97,9 +99,14 @@ module.exports = {
         else{
           console.log('이미지 찾는중')
           oneboard.dataValues.filepath = [];
+          oneboard.dataValues.fileinfo = [];
           for(let j = 0; j<filepath.length; j++){
             oneboard.dataValues.filepath.push(filepath[j].dataValues.filepath);
             //console.log(allboard);
+
+            fs.readFile(filepath[j].dataValues.filepath, function(err, data){
+              oneboard.dataValues.fileinfo.push(data);
+            })
           }
 
         res.status(200).send(oneboard);
@@ -113,6 +120,47 @@ module.exports = {
       res.status(500).send("게시물 조회 실패")
     }
   },
+/*
+  showImage: async (req, res) => {
+    if(req.body.id){
+      const oneboard = await board.findOne({ where : { id: req.body.id } });
+      if(oneboard){
+
+        let filepath = await photo.findAll({
+          where: {
+            boardid : oneboard.id
+          }
+        })
+        if(filepath.length === 0){
+          console.log("이미지가 없습니다.")
+        }
+        else{
+          console.log('이미지 찾는중')
+          oneboard.dataValues.filepath = [];
+          oneboard.dataValues.fileinfo = [];
+          const fileinfo = [];
+          for(let j = 0; j<filepath.length; j++){
+            oneboard.dataValues.filepath.push(filepath[j].dataValues.filepath);
+            //console.log(allboard);
+
+            fs.readFile(filepath[j].dataValues.filepath, function (err, data) {
+              
+              res.send(data);   //본문을 만들고s
+            })
+          }
+          //res.end();
+        //res.status(200).send(fileinfo);
+      }
+    }
+      else{
+        res.status(200).send("없는 게시물")
+      }
+    }
+    else{
+      res.status(500).send("게시물 조회 실패")
+    }
+  },
+  */ //완전 개편
 
 };
 
