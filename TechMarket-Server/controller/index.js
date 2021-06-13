@@ -120,9 +120,11 @@ module.exports = {
   signUpController: async (req, res) => {
     //회원가입 로직 및 유저 생성 로직
     //이미 가입된 회원
+    /*
     if(!(req.body.name && req.body.email && req.body.password)){
       res.status(409).send('your account already exist');
     }
+    */
     
     const userInfo = await user.findOne({ where: { email: req.body.email} });
 
@@ -150,6 +152,23 @@ module.exports = {
     else{ //생성불가능
       res.status(409).send('your account already exist');
     }
+  },
+
+  updateUserinfo: async (req, res) => {
+    //로그인 상태 검사
+    let newname = req.body.username;
+    let newpassword = req.body.password;
+
+    const userinfo = await user.findOne({ where : { email : req.body.email } });
+
+    if(userinfo){
+      await userinfo.update({ username : newname, password : newpassword });
+      res.status(200).send( userinfo );
+    }
+    else{
+      res.status(500).send("정보 업데이트 실패")
+    }
+    
   },
 };
 
