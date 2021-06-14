@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
 //0611 전체 글 목록 시작
 //0611 전체 글목록 , 글 하나 조회 완료
 app.listen(port, ()=>{
-  console.log(`🔥 server listen in ${port} 🔥`);
+  console.log(`서버가 ${port}번에서 작동중입니다.`);
 })
 //이걸로도 https 프로토콜 전송이 안되면 다시 변경
 /*
