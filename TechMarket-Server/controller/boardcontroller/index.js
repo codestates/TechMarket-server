@@ -36,23 +36,23 @@ module.exports = {
   deleteController: async (req, res) => {
     //글 삭제하는 로직 작성
     //로그인후 writerid가 맞다면 삭제가능
-    //글 제목으로 db에서 글을 찾아 삭제합니다.
-    //글 번호를 이용하는 방법 고려.
-    if(req.body.writerid){
+    //글 번호으로 db에서 글을 찾아 삭제합니다.
+    if(req.body.id){
       const boardcontent = await board.findOne({
-        where: { writerid : req.body.writerid, title: req.body.title },
+        where: { id : req.body.id },
       });
 
       if(boardcontent){
+        //여기서 조건문으로 비밀번호나 토큰과 같은 검사가 필요함.
         boardcontent.destroy();
         res.status(200).send("삭제 완료");
       }
       else{
-        res.status(500).send( "바디를 한 번 더 확인하세요" );
+        res.status(403).send( "바디를 한 번 더 확인하세요" );
       }
     }
     else{
-      res.status(500).send( "body에 writerid가 없습니다" );
+      res.status(400).send( "body에 게시물번호가 없습니다" );
     }
   },
   createComment: async (req, res) => {

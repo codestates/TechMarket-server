@@ -52,10 +52,6 @@ app.get("/products", searchcontroller.showAllboard);    //전체 글 목록 불�
 app.get("/board", searchcontroller.showOneboard);       //게시물 하나 조회
 
 app.get("/user/info", controllers.userInfoController);
-app.post("/user/login", controllers.logInController);
-app.post("/user/signup", controllers.signUpController);
-app.post("/user/signout", controllers.signOutController);
-
 
 app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');

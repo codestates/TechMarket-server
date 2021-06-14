@@ -52,11 +52,11 @@ module.exports = {
           let tempimage = await photo.create({ boardid: newContent.id, imagename : req.files[i].originalname, filepath : req.files[i].path});
           console.log(tempimage);
         }
-        res.status(200).send("게시글과 이미지 저장 완료")
+        res.status(201).send("게시글과 이미지 저장 완료")
       }
       else{
         console.log("이미지가 없습니다.(게시글은 저장)")
-        res.status(200).send("no image")
+        res.status(201).send("no image")
       }
     }
 
@@ -67,10 +67,10 @@ module.exports = {
           let tempimage = await photo.create({ boardid: '0', imagename : req.files[i].originalname, filepath : req.files[i].path});
           console.log(tempimage);
         }
-        res.status(200).send("게시글이 없습니다.(이미지는 저장)")
+        res.status(201).send("게시글이 없습니다.(이미지는 저장)")
       }
       else{
-        res.status(500).send("게시글과 이미지 모두 없습니다.")
+        res.status(202).send("게시글과 이미지 모두 없습니다.")
       }
     }
 
