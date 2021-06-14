@@ -114,9 +114,9 @@ module.exports = {
           oneboard.dataValues.filename = [];
           oneboard.dataValues.filename.push("defaultimage");
 
-          let hits = oneboard.hit;
+          let hits = Number(oneboard.hit);
           hits+=1;
-          oneboard.update({hit: hits });
+          oneboard.update({hit: String(hits) });
 
           res.status(200).send(oneboard);
         }
@@ -126,9 +126,9 @@ module.exports = {
           for(let j = 0; j<filepath.length; j++){
             oneboard.dataValues.filename.push(filepath[j].dataValues.filepath.substring(14,));
           }
-          let hits = oneboard.hit;
+          let hits = Number(oneboard.hit);
           hits+=1;
-          oneboard.update({hit: hits });
+          oneboard.update({hit: String(hits) });
 
           res.status(200).send(oneboard);
         }
