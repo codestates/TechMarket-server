@@ -1,12 +1,18 @@
 const express = require('express');
 const cors = require('cors');
-
 const multer = require('multer');
+const fs = require('fs');
+//const jwt = require('jsonwebtoken');
+//const { authToken } = require('./middleware/token');
+//const db = require('./db/connection');
+
 const upload = multer({ dest: 'uploadedFiles/'});
+
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
 const https = require('https');
-const fs = require('fs');
+//const { authToken } = require('./middleware/token');
+//const db = require('./db/connection');
 const bodyParser = require("body-parser");
 
 const controllers = require("./controller");
@@ -18,11 +24,12 @@ require("./models");
 
 const app = express();
 app.use(express.json());
-app.use(express.static('uploadedFiles'));
+const port = 8080;
+
 app.set('view engine', 'ejs');
-app.use(bodyParser.json());
+
+app.use(express.static('uploadedFiles'));
 app.use(cookieParser());
-const port = 80;
 app.use(
   cors({
     origin: true,
@@ -58,8 +65,14 @@ app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');
 });
 
+
+//06.10 ec2 - rds 연결확인
+//0611 파일 업로드 확인
+//0611 검색기능 완료
+//0611 전체 글 목록 시작
+//0611 전체 글목록 , 글 하나 조회 완료
 app.listen(port, ()=>{
-  console.log(`🔥 server listen in ${port} 🔥`);
+  console.log(`서버가 ${port}번에서 작동중입니다.`);
 })
 //이걸로도 https 프로토콜 전송이 안되면 다시 변경
 /*

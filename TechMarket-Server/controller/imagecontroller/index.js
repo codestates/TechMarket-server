@@ -15,6 +15,9 @@ module.exports = {
     //로그인 되어 있는지 검사 필요
     //***중요 key가 photos이어야 함.
 
+    console.log(req.body);
+    console.log(req.files);
+
     //디렉토리 생성
     var dir = './uploadedFiles'
     if (!fs.existsSync(dir)){
