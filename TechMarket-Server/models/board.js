@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     registday: DataTypes.STRING,
-    hit: DataTypes.STRING
+    hit: DataTypes.STRING,
+    email: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'board',

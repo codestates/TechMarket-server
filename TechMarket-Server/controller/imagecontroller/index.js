@@ -31,7 +31,7 @@ module.exports = {
     if(req.body.writerid){
 
       const newContent = await board.create({ writerid: req.body.writerid, category : req.body.category, title: req.body.title, content : req.body.content,
-      registday : req.body.registday, hit : 0 });
+      registday : req.body.registday, hit : 0, email : req.body.email });
       
       /*
       let response = {  
@@ -56,7 +56,7 @@ module.exports = {
       }
       else{
         console.log("이미지가 없습니다.(게시글은 저장)")
-        res.status(201).send("no image")
+        res.status(201).send("이미지가 없습니다.(게시글은 저장)")
       }
     }
 
