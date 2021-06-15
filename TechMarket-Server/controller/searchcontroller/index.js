@@ -2,7 +2,9 @@ const multer = require('multer');
 const { Op } = require("sequelize");
 
 const { board } = require("../../models"); 
-const { photo } = require("../../models")
+const { photo } = require("../../models");
+const { comment } = require("../../models")
+
 
 module.exports = {
   searchController: async (req, res) => {
@@ -29,7 +31,7 @@ module.exports = {
     })
 
     if(result.length == 0){
-      res.status(200).send("검색 결과가 없거나 검색에 실패하였습니다.")
+      res.status(202).send("검색 결과가 없거나 검색에 실패하였습니다.")
     }
     else{
       //파일 이름 붙이기
@@ -104,6 +106,21 @@ module.exports = {
       const oneboard = await board.findOne({ where : { id: req.query.id } });
       if(oneboard){
 
+        let comments = await comment.findAll({
+          where: {
+            boardid : oneboard.id
+          }
+        })
+        oneboard.dataValues.comments = [];
+        if(comments.length === 0){ //댓글이 없을 때
+          console.log("댓글이 없습니다.")
+        }
+        else{
+          for(let j = 0; j<comments.length; j++){
+            oneboard.dataValues.comments.push(comments[j]);
+          }
+        }
+
         let filepath = await photo.findAll({
           where: {
             boardid : oneboard.id
@@ -134,7 +151,7 @@ module.exports = {
         }
     }
       else{
-        res.status(200).send("없는 게시물")
+        res.status(400).send("없는 게시물")
       }
     }
     else{
