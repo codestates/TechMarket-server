@@ -168,7 +168,25 @@ module.exports = {
     else{
       res.status(500).send("정보 업데이트 실패")
     }
-    
+  },
+  dealController: async (req, res ) => {  //거래횟수
+    try {
+      const userInfo = await user.findOne({
+        where: { username : req.body.writerid },
+      });
+      const deal_count = userInfo.deal_count;
+      let update_deal_count = Number(deal_count)
+      update_deal_count++;
+
+      const updateUserInfo = await user.update({
+        deal_count : update_deal_count
+      },{
+        where : {username: req.body.writerid}
+      })
+      res.status(200).send(updateUserInfo)
+    } catch(err){
+      res.status(500).send(err)
+  }
   },
 };
 

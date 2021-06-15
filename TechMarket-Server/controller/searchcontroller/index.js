@@ -158,5 +158,102 @@ module.exports = {
       res.status(500).send("게시물 조회 실패")
     }
   },
+
+  emailSearch: async (req, res) => {
+    //검색 로직 작성
+    //이메일로 작성기록 검색.
+    console.log("검색어");
+    //body의 search_word로 온다.
+    const email = req.query.email;
+    let result = await board.findAll({
+      where: { email : req.query.email }
+    })
+
+    if(result.length == 0){
+      res.status(202).send("검색 결과가 없거나 검색에 실패하였습니다.")
+    }
+    else{
+      //파일 이름 붙이기
+      for(let i=0; i<result.length; i++){
+        let filepath = await photo.findAll({ //filepath = 게시물에 해당하는 이미지들
+          where: {
+            boardid : result[i].id
+          }
+        })
+        if(filepath.length === 0){
+          console.log("이미지가 없습니다. 기본 이미지를 썸네일로 정합니다.");
+          result[i].dataValues.thumbnail = "defaultimage"
+        }
+        else{
+          console.log('이미지 찾는중')
+          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,); //첫 번째 사진이 썸네일
+        }
+      }
+      try {
+        res.send({ //정보 넘김
+            message: "검색결과",
+            status: 'success',
+            data: {
+                email,
+                result,
+            }
+        });
+    } catch (err) { //무언가 문제가 생김
+        res.send({
+            message: "ERROR",
+            status: 'fail'
+        })
+    }
+    }
+  },
+  categorySearch: async (req, res) => {
+    //검색 로직 작성
+    //이메일로 작성기록 검색.
+    console.log("검색어");
+    //body의 search_word로 온다.
+    const category = req.query.category;
+    let result = await board.findAll({
+      where: {
+        category : category
+      }
+    })
+
+    if(result.length == 0){
+      res.status(202).send("검색 결과가 없거나 검색에 실패하였습니다.")
+    }
+    else{
+      //파일 이름 붙이기
+      for(let i=0; i<result.length; i++){
+        let filepath = await photo.findAll({ //filepath = 게시물에 해당하는 이미지들
+          where: {
+            boardid : result[i].id
+          }
+        })
+        if(filepath.length === 0){
+          console.log("이미지가 없습니다. 기본 이미지를 썸네일로 정합니다.");
+          result[i].dataValues.thumbnail = "defaultimage"
+        }
+        else{
+          console.log('이미지 찾는중')
+          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,); //첫 번째 사진이 썸네일
+        }
+      }
+      try {
+        res.send({ //정보 넘김
+            message: "검색결과",
+            status: 'success',
+            data: {
+                category,
+                result,
+            }
+        });
+    } catch (err) { //무언가 문제가 생김
+        res.send({
+            message: "ERROR",
+            status: 'fail'
+        })
+    }
+    }
+  },
 };
 
