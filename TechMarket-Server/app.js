@@ -8,6 +8,7 @@ const upload = multer({ dest: 'uploadedFiles/'});
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
 const https = require('https');
+const http = require('http');
 //const { authToken } = require('./middleware/token');
 //const db = require('./db/connection');
 
@@ -56,12 +57,24 @@ app.get("/category", searchcontroller.categorySearch ); //이메일로 글 검�
 
 
 app.get("/user/info", controllers.userInfoController);
-
+/*
 app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');
 });
+*/
 
+ app.listen(port);
 
+https
+  .createServer(
+    {
+      key: fs.readFileSync('./key.pem', 'utf-8'),
+      cert: fs.readFileSync('./cert.pem', 'utf-8'),
+    },
+    app)
+  .listen(3001);
+
+  /*
 app.listen(port, ()=>{
   console.log(`서버가 ${port}번에서 작동중입니다.`);
 })
