@@ -57,14 +57,17 @@ app.get("/category", searchcontroller.categorySearch ); //이메일로 글 검�
 
 
 app.get("/user/info", controllers.userInfoController);
-/*
+
 app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');
 });
-*/
 
- app.listen(port);
 
+app.listen(port, () => {
+  console.log(`서버가 ${port}번에서 작동중입니다.`);
+});
+
+ /*
 https
   .createServer(
     {
@@ -73,7 +76,7 @@ https
     },
     app)
   .listen(3001);
-
+*/
   /*
 app.listen(port, ()=>{
   console.log(`서버가 ${port}번에서 작동중입니다.`);

@@ -1,6 +1,8 @@
 const { user } = require("../models"); //미완성 모델
 const jwt = require('jsonwebtoken'); //토큰 관련
 const cookieParser = require('cookie-parser')
+const { Op } = require("sequelize");
+
 
 
 module.exports = {
@@ -126,7 +128,18 @@ module.exports = {
     }
     */
     
-    const userInfo = await user.findOne({ where: { email: req.body.email} });
+    const userInfo = await user.findOne({
+      where: {
+        [Op.or] : [
+          {
+            email: req.body.email
+          },
+          {
+            username : req.body.username
+          }
+        ]
+      }
+    });
 
     if(userInfo === null){ //생성가능
       

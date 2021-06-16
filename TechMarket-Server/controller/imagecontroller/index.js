@@ -1,11 +1,9 @@
 const multer = require('multer');
 const fs = require('fs');
 
+const { user } = require("../../models")
 const { board } = require("../../models"); 
 const { photo } = require("../../models")
-
-//const jwt = require('jsonwebtoken'); //토큰 관련
-//const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET, { expiresIn: '14d', issuer: 'cotak' }); //토큰관련
 
 //const upload = multer({ dest: 'uploadedFiles/', limits: { fileSize: 5 * 1024 * 1024 } });
 
@@ -30,8 +28,14 @@ module.exports = {
     
     if(req.body.writerid){
 
+      const userinfo = await user.findOne({ //filepath = 게시물에 해당하는 이미지들
+        where: {
+          username : req.body.writerid
+        }
+      })
+
       const newContent = await board.create({ writerid: req.body.writerid, category : req.body.category, title: req.body.title, content : req.body.content,
-      registday : req.body.registday, hit : 0, email : req.body.email });
+      registday : req.body.registday, hit : 0, email : userinfo.email });
       
       /*
       let response = {  
@@ -56,7 +60,7 @@ module.exports = {
       }
       else{
         console.log("이미지가 없습니다.(게시글은 저장)")
-        res.status(201).send("이미지가 없습니다.(게시글은 저장)")
+        res.status(201).send(newContent)
       }
     }
 
