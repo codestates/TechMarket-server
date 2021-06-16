@@ -51,7 +51,7 @@ module.exports = {
         }
       }
       try {
-        res.send({ //정보 넘김
+        res.status(200).send({ //정보 넘김
             message: "검색결과",
             status: 'success',
             data: {
@@ -88,7 +88,7 @@ module.exports = {
         }
       }
       try {
-        res.send( allboard );
+        res.status(200).send( allboard );
     } catch (err) { //무언가 문제가 생김
         res.send({
             message: "ERROR",
@@ -190,7 +190,7 @@ module.exports = {
         }
       }
       try {
-        res.send({ //정보 넘김
+        res.status(200).send({ //정보 넘김
             message: "검색결과",
             status: 'success',
             data: {
@@ -239,7 +239,7 @@ module.exports = {
         }
       }
       try {
-        res.send({ //정보 넘김
+        res.status(200).send({ //정보 넘김
             message: "검색결과",
             status: 'success',
             data: {

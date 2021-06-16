@@ -60,34 +60,31 @@ module.exports = {
     //req로 아이디, 작성시 비밀번호, 내용, 게시물 아이디를 받아온다.
     
     const boardcontent = await board.findOne({
-      where : { id : req.body.id }
+      where : { id : req.body.boardid }
     })
     if(!boardcontent){
-      res.status(202).send("없는 게시물입니다. 잘못된 요청")
+      res.status(500).send("없는 게시물입니다. 잘못된 요청")
     }
 
     else{
-      const newComment = await comment.create({ username: req.body.username, password : req.body.password, content: req.body.content, boardid : req.body.id});
+      const newComment = await comment.create({ username: req.body.username, password : req.body.password, content: req.body.content, boardid : req.body.boardid});
       res.status(200).send(newComment);
+      console.log(newComment)
     }
   },
 
   deleteComment: async (req, res) => {
-    //댓글 지우기 - 미완성
+    //댓글 지우기
     //댓글의 id를 받아와 password가 맞는지 확인하고 지운다.
     
     const commentcontent = await comment.findOne({ where : { id : req.body.id } });
+
     if(!commentcontent){
       res.status(500).send("잘못된 댓글 아이디/없는 아이디입니다.")
     }
     else{
-      if(commentcontent.password === req.body.password){
-        commentcontent.delete();
-        res.status(200).send("정상적으로 댓글이 삭제되었습니다.");
-      }
-      else{
-        res.status(304).send("비밀번호가 다릅니다.");
-      }
+      commentcontent.destroy();
+      res.status(200).send("정상적으로 댓글이 삭제되었습니다.");
     }
   },
 
