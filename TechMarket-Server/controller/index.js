@@ -4,9 +4,6 @@ const cookieParser = require('cookie-parser')
 
 
 module.exports = {
-  tokenController: () => {
-
-  },
 
   logInController: async (req, res) => {
     //로그인 로직 작성
@@ -50,11 +47,8 @@ module.exports = {
       //토큰이 있는지 없는지 확인한다.
 
       let authorization = req.headers['authorization'];
-      //let authorization2 = req.headers.authorization2;
       const tokenCheck = authorization.split(' ')[1];
-      //const tokenCheck2 = authorization2.split(' ')[1];
       const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET);
-      //const refreshdata = jwt.verify(tokenCheck2, process.env.REFRESH_SECRET);
 
       if(!req.headers['authorization']){
         res.status(404).send("your account not exsist!!!")
@@ -64,13 +58,12 @@ module.exports = {
         where: { email : data.email },
       });
   
-      console.log(Date.now());
-      console.log(data.exp * 1000);
+      // console.log(Date.now());
+      // console.log(data.exp * 1000);
       if(data.exp * 1000 < Date.now()){
-        console.log('change');
         const token = jwt.sign({
           email: userInfo.email
-        }, process.env.ACCESS_SECRET, { expiresIn: '1d' });
+        }, process.env.ACCESS_SECRET, { ignoreExpiration: true });
 
         let response = {  
           id: userInfo.dataValues.id,
@@ -88,11 +81,6 @@ module.exports = {
           }
         });
       }
-
-      // if(!userInfo){ //미인증 처리
-      //   res.status(401).send({result: "토큰 값이 변경되었습니다."}).json({
-      //   })
-      // }
       
       else{
           let response = {  

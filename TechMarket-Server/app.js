@@ -2,19 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
-//const jwt = require('jsonwebtoken');
-//const { authToken } = require('./middleware/token');
-//const db = require('./db/connection');
-
 const upload = multer({ dest: 'uploadedFiles/'});
-
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
 const https = require('https');
-//const { authToken } = require('./middleware/token');
-//const db = require('./db/connection');
 const bodyParser = require("body-parser");
-
 const controllers = require("./controller");
 const boardcontroller = require("./controller/boardcontroller")
 const imagecontroller = require("./controller/imagecontroller")
@@ -24,21 +16,19 @@ require("./models");
 
 const app = express();
 app.use(express.json());
-const port = 80;
+const port = 8080;
 
 app.set('view engine', 'ejs');
 
 app.use(express.static('uploadedFiles'));
 app.use(cookieParser());
+
 app.use(
   cors({
     origin: true,
     credentials: true
   })
 );
-
-//토큰을 먼저 판별해주는 미들웨어
-//app.post("/token", controllers.tokenController);
 
 //유저 정보 관련 - 토큰인증후 보완해야 함
 app.post("/user/login", controllers.logInController);     //로그인
