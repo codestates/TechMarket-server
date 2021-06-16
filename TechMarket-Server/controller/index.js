@@ -51,42 +51,43 @@ module.exports = {
   }
 
   },
-  userInfoController: async (req, res) =>{
+  userInfoController: async (req, res) => {
     try{
-      //토큰이 있는지 없는지 확인한다.
-      //console.log(req.cookies.tech_auth)
-      //const tokenCheck = req.cookies.split(' ')[1];
-      console.log(req.cookies);
-      const tokenCheck = req.cookies.tech_auth;
-      // let authorization = req.headers['authorization'];
-      // console.log(authorization);
-      if(!tokenCheck){
+      let authorization = req.headers['authorization'];
+      const tokenCheck = authorization.split(' ')[1];
+      console.log("tokenCheck : " + tokenCheck)
+      const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET, {ignoreExpiration: true});
+
+      if(!req.headers['authorization']){
         res.status(404).send("your account not exsist!!!")
       }
-      // if(!req.headers['authorization']){
-      //   res.status(404).send("your account not exsist!!!")
-      // }
-      
-      //let tokenCheck = req.headers.cookie.split('=')[1];
-      //console.log(tokenCheck);
-      //받는 값 프론트분들과 얘기하면서 정하기
-      else {
-        //const tokenCheck = authorization.split(' ')[1];
-        const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET);
-        //const data = jwt.decode(tokenCheck);
-        console.log(data);
 
-        const userInfo = await user.findOne({
-          where: { email : data.email },
-        });
-        console.log(userInfo.dataValues);
+      const userInfo = await user.findOne({
+        where: { email : data.email },
+      });
+    
+      if(data.exp * 1000 < Date.now()){
+        const token = jwt.sign({
+          email: userInfo.email
+        }, process.env.ACCESS_SECRET, { expiresIn: '1m' });
 
-        if(!userInfo){
-          //오류 json send 특정 값으로 보낼건지? 400번대 에러로 처리를 해야할지?
-          res.json({result: "토큰 값이 변경되었습니다."})
+        let response = {  
+          id: userInfo.dataValues.id,
+          email: userInfo.dataValues.email,
+          password: userInfo.dataValues.password,
+          username: userInfo.dataValues.username,
+          deal_count: userInfo.dataValues.deal_count,
+          createdAt: userInfo.dataValues.created_time,
+          updatedAt: userInfo.dataValues.updated_time
         }
-
-        else{
+        res.status(200).json({ 
+          response, 
+          result: { 
+            access_token: token,
+          }
+        });
+      }
+      else{
           let response = {  
             id: userInfo.dataValues.id,
             email: userInfo.dataValues.email,
@@ -97,9 +98,7 @@ module.exports = {
             updatedAt: userInfo.dataValues.updated_time
           }
           res.status(200).json( response )
-        }
-
-      }
+      } 
     }
     catch(err){
       return res.status(500).send(err);
