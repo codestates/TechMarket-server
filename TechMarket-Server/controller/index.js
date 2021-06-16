@@ -4,6 +4,10 @@ const cookieParser = require('cookie-parser')
 
 
 module.exports = {
+  tokenController: () => {
+
+  },
+
   logInController: async (req, res) => {
     //로그인 로직 작성
   try{
@@ -16,18 +20,10 @@ module.exports = {
     }
 
     else {
-  
-      //JWT(access, refresh)를 생성
+
       const token = jwt.sign({
         email: userInfo.email
-      }, process.env.ACCESS_SECRET, { expiresIn: '1m' });
-
-      const refreshToken = jwt.sign({
-        email: userInfo.email
-      }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
-
-      //console.log(token);
-      //console.log(refreshToken);
+      }, process.env.ACCESS_SECRET, { expiresIn: '1d' });
 
       let response = {  
         id: userInfo.id,
@@ -40,7 +36,7 @@ module.exports = {
       res.status(200).json({ 
         response, 
         result: { 
-          access_token: token
+          access_token: token,
         }
       });
     }
@@ -52,39 +48,53 @@ module.exports = {
   userInfoController: async (req, res) =>{
     try{
       //토큰이 있는지 없는지 확인한다.
-      //console.log(req.cookies.tech_auth)
-      //const tokenCheck = req.cookies.split(' ')[1];
-      console.log(req.cookies);
-      const tokenCheck = req.cookies.tech_auth;
-      // let authorization = req.headers['authorization'];
-      // console.log(authorization);
-      if(!tokenCheck){
+
+      let authorization = req.headers['authorization'];
+      //let authorization2 = req.headers.authorization2;
+      const tokenCheck = authorization.split(' ')[1];
+      //const tokenCheck2 = authorization2.split(' ')[1];
+      const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET);
+      //const refreshdata = jwt.verify(tokenCheck2, process.env.REFRESH_SECRET);
+
+      if(!req.headers['authorization']){
         res.status(404).send("your account not exsist!!!")
       }
-      // if(!req.headers['authorization']){
-      //   res.status(404).send("your account not exsist!!!")
+
+      const userInfo = await user.findOne({
+        where: { email : data.email },
+      });
+  
+      console.log(Date.now());
+      console.log(data.exp * 1000);
+      if(data.exp * 1000 < Date.now()){
+        console.log('change');
+        const token = jwt.sign({
+          email: userInfo.email
+        }, process.env.ACCESS_SECRET, { expiresIn: '1d' });
+
+        let response = {  
+          id: userInfo.dataValues.id,
+          email: userInfo.dataValues.email,
+          password: userInfo.dataValues.password,
+          username: userInfo.dataValues.username,
+          deal_count: userInfo.dataValues.deal_count,
+          createdAt: userInfo.dataValues.created_time,
+          updatedAt: userInfo.dataValues.updated_time
+        }
+        res.status(401).json({ 
+          response,
+          result: { 
+            access_token: token,
+          }
+        });
+      }
+
+      // if(!userInfo){ //미인증 처리
+      //   res.status(401).send({result: "토큰 값이 변경되었습니다."}).json({
+      //   })
       // }
       
-      //let tokenCheck = req.headers.cookie.split('=')[1];
-      //console.log(tokenCheck);
-      //받는 값 프론트분들과 얘기하면서 정하기
-      else {
-        //const tokenCheck = authorization.split(' ')[1];
-        const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET);
-        //const data = jwt.decode(tokenCheck);
-        console.log(data);
-
-        const userInfo = await user.findOne({
-          where: { email : data.email },
-        });
-        console.log(userInfo.dataValues);
-
-        if(!userInfo){
-          //오류 json send 특정 값으로 보낼건지? 400번대 에러로 처리를 해야할지?
-          res.json({result: "토큰 값이 변경되었습니다."})
-        }
-
-        else{
+      else{
           let response = {  
             id: userInfo.dataValues.id,
             email: userInfo.dataValues.email,
@@ -95,10 +105,10 @@ module.exports = {
             updatedAt: userInfo.dataValues.updated_time
           }
           res.status(200).json( response )
-        }
-
       }
+      
     }
+
     catch(err){
       return res.status(500).send(err);
     } 
@@ -106,15 +116,11 @@ module.exports = {
   signOutController: (req, res) => {
     //로그아웃 로직 작성
     //로그인 상태검사
-
-    //api문서 수정  = > 굳이 로그인 여부와 상관없이 
-    // 클라이언트 측에서 로그인하였을시에만 로그아웃 버튼이 보여지기때문에
-    // 그냥 바로 처리하기로함.
     try{
-      res.status(200).json({result: { access_token: "" }}).send("See you next time!");
+      res.status(200).send("See you next time!");
     }
     catch(err){
-
+      res.status(500).send(err);
     }
   },
   signUpController: async (req, res) => {

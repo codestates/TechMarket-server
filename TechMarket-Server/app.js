@@ -24,7 +24,7 @@ require("./models");
 
 const app = express();
 app.use(express.json());
-const port = 8080;
+const port = 80;
 
 app.set('view engine', 'ejs');
 
@@ -36,6 +36,9 @@ app.use(
     credentials: true
   })
 );
+
+//토큰을 먼저 판별해주는 미들웨어
+//app.post("/token", controllers.tokenController);
 
 //유저 정보 관련 - 토큰인증후 보완해야 함
 app.post("/user/login", controllers.logInController);     //로그인
@@ -56,9 +59,6 @@ app.get("/products", searchcontroller.showAllboard);    //전체 글 목록 불�
 app.get("/board", searchcontroller.showOneboard);       //게시물 하나 조회
 
 app.get("/user/info", controllers.userInfoController)
-app.post("/user/login", controllers.logInController);
-app.post("/user/signup", controllers.signUpController);
-app.post("/user/signout", controllers.signOutController);
 
 
 app.get('/', (req, res) => {
@@ -66,30 +66,6 @@ app.get('/', (req, res) => {
 });
 
 
-//06.10 ec2 - rds 연결확인
-//0611 파일 업로드 확인
-//0611 검색기능 완료
-//0611 전체 글 목록 시작
-//0611 전체 글목록 , 글 하나 조회 완료
 app.listen(port, ()=>{
   console.log(`서버가 ${port}번에서 작동중입니다.`);
 })
-//이걸로도 https 프로토콜 전송이 안되면 다시 변경
-/*
-let server;
-
-if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
-  server = https.createServer(
-      {
-        key: fs.readFileSync(__dirname + `/` + 'key.pem', 'utf-8'),
-        cert: fs.readFileSync(__dirname + `/` + 'cert.pem', 'utf-8'),
-      },
-      app
-    )
-    .listen(port);
-} else {
-  server = app.listen(port, ()=>{
-    console.log(`🔥 server listen in ${port} 🔥`);
-  })
-}
-*/
