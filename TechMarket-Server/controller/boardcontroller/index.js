@@ -1,8 +1,8 @@
 const { board } = require("../../models"); 
 const { comment } = require("../../models")
+const { photo } = require("../../models")
 
-//const jwt = require('jsonwebtoken'); //토큰 관련
-//const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET, { expiresIn: '14d', issuer: 'cotak' }); //토큰관련
+const fs = require('fs');
 
 
 module.exports = {
@@ -41,9 +41,25 @@ module.exports = {
       const boardcontent = await board.findOne({
         where: { id : req.body.id },
       });
+      const photocontent = await photo.findAll({
+        where: { boardid : id }
+      })
+      const commentcontent = await comment.findAll({
+        where : { boardid : id }
+      })
+
+      if(photocontent){ //서버 컴퓨터의 사진데이터 삭제
+        for(let i = 0; i<photocontent.length; i++){
+          fs.unlink(`../../${photocontent[i].filepath}`)
+        }
+        photocontent.destroy(); //photo 데이터 베이스 삭제
+      }
+
+      if(commentcontent){
+        commentcontent.destroy(); //댓글 데이터 베이스 삭제
+      }
 
       if(boardcontent){
-        //여기서 조건문으로 비밀번호나 토큰과 같은 검사가 필요함.
         boardcontent.destroy();
         res.status(200).send("삭제 완료");
       }
@@ -74,11 +90,8 @@ module.exports = {
   },
 
   deleteComment: async (req, res) => {
-    //댓글 지우기
-    //댓글의 id를 받아와 password가 맞는지 확인하고 지운다.
-    
+    //댓글 지우기 
     const commentcontent = await comment.findOne({ where : { id : req.body.id } });
-
     if(!commentcontent){
       res.status(500).send("잘못된 댓글 아이디/없는 아이디입니다.")
     }
@@ -87,7 +100,6 @@ module.exports = {
       res.status(200).send("정상적으로 댓글이 삭제되었습니다.");
     }
   },
-
 
 };
 
