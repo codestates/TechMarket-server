@@ -1,6 +1,5 @@
 const { user } = require("../models"); //미완성 모델
 const jwt = require('jsonwebtoken'); //토큰 관련
-const cookieParser = require('cookie-parser')
 const { Op } = require("sequelize");
 
 
@@ -19,17 +18,9 @@ module.exports = {
 
     else {
   
-      //JWT(access, refresh)를 생성
       const token = jwt.sign({
         email: userInfo.email
       }, process.env.ACCESS_SECRET, { expiresIn: '1m' });
-
-      const refreshToken = jwt.sign({
-        email: userInfo.email
-      }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
-
-      //console.log(token);
-      //console.log(refreshToken);
 
       let response = {  
         id: userInfo.id,
@@ -55,7 +46,6 @@ module.exports = {
     try{
       let authorization = req.headers['authorization'];
       const tokenCheck = authorization.split(' ')[1];
-      console.log("tokenCheck : " + tokenCheck)
       const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET, {ignoreExpiration: true});
 
       if(!req.headers['authorization']){
@@ -107,12 +97,8 @@ module.exports = {
   signOutController: (req, res) => {
     //로그아웃 로직 작성
     //로그인 상태검사
-
-    //api문서 수정  = > 굳이 로그인 여부와 상관없이 
-    // 클라이언트 측에서 로그인하였을시에만 로그아웃 버튼이 보여지기때문에
-    // 그냥 바로 처리하기로함.
     try{
-      res.status(200).json({result: { access_token: "" }}).send("See you next time!");
+      res.status(200).send("See you next time!");
     }
     catch(err){
 
