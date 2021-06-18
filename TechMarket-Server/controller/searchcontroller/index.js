@@ -1,28 +1,22 @@
 const multer = require('multer');
 const { Op } = require("sequelize");
-
 const { board } = require("../../models"); 
 const { photo } = require("../../models");
 const { comment } = require("../../models")
 
-
 module.exports = {
   searchController: async (req, res) => {
-    //검색 로직 작성
-    //검색어를 받아와 제목에서 검색.
-    console.log("검색어");
-    //body의 search_word로 온다.
     const word = req.query.search_word;
     let result = await board.findAll({
       where: {
         [Op.or] : [
           {
-            title: { //제목에 검색어가 포함됐나?
+            title: {
               [Op.like]: `%${word}%`
             }
           },
           {
-            content : { //내용에도 검색어가 포함 되었는지
+            content : {
               [Op.like]: `%${word}%`
             }
           }
@@ -34,9 +28,8 @@ module.exports = {
       res.status(202).send("검색 결과가 없거나 검색에 실패하였습니다.")
     }
     else{
-      //파일 이름 붙이기
       for(let i=0; i<result.length; i++){
-        let filepath = await photo.findAll({ //filepath = 게시물에 해당하는 이미지들
+        let filepath = await photo.findAll({
           where: {
             boardid : result[i].id
           }
@@ -47,11 +40,11 @@ module.exports = {
         }
         else{
           console.log('이미지 찾는중')
-          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,); //첫 번째 사진이 썸네일
+          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,);
         }
       }
       try {
-        res.status(200).send({ //정보 넘김
+        res.status(200).send({
             message: "검색결과",
             status: 'success',
             data: {
@@ -59,7 +52,7 @@ module.exports = {
                 result,
             }
         });
-    } catch (err) { //무언가 문제가 생김
+    } catch (err) {
         res.send({
             message: "ERROR",
             status: 'fail'
@@ -71,9 +64,8 @@ module.exports = {
   showAllboard: async (req, res) => {
     const allboard = await board.findAll();
     if(allboard){
-      //파일 이름 붙이기
       for(let i=0; i<allboard.length; i++){
-        let filepath = await photo.findAll({ //filepath = 게시물에 해당하는 이미지들
+        let filepath = await photo.findAll({
           where: {
             boardid : allboard[i].id
           }
@@ -84,12 +76,12 @@ module.exports = {
         }
         else{
           console.log('이미지 찾는중')
-          allboard[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,); //첫 번째 사진이 썸네일
+          allboard[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,);
         }
       }
       try {
         res.status(200).send( allboard );
-    } catch (err) { //무언가 문제가 생김
+    } catch (err) { 
         res.send({
             message: "ERROR",
             status: 'fail'
@@ -101,7 +93,6 @@ module.exports = {
     }
   },
   showOneboard: async (req, res) => {
-    //게시글 클릭시 조회 하는 기능
     if(req.query.id){
       const oneboard = await board.findOne({ where : { id: req.query.id } });
       if(oneboard){
@@ -112,7 +103,7 @@ module.exports = {
           }
         })
         oneboard.dataValues.comments = [];
-        if(comments.length === 0){ //댓글이 없을 때
+        if(comments.length === 0){
           console.log("댓글이 없습니다.")
         }
         else{
@@ -160,10 +151,6 @@ module.exports = {
   },
 
   emailSearch: async (req, res) => {
-    //검색 로직 작성
-    //이메일로 작성기록 검색.
-    console.log("검색어");
-    //body의 search_word로 온다.
     const email = req.query.email;
     let result = await board.findAll({
       where: { email : req.query.email }
@@ -173,9 +160,8 @@ module.exports = {
       res.status(202).send("검색 결과가 없거나 검색에 실패하였습니다.")
     }
     else{
-      //파일 이름 붙이기
       for(let i=0; i<result.length; i++){
-        let filepath = await photo.findAll({ //filepath = 게시물에 해당하는 이미지들
+        let filepath = await photo.findAll({
           where: {
             boardid : result[i].id
           }
@@ -186,11 +172,11 @@ module.exports = {
         }
         else{
           console.log('이미지 찾는중')
-          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,); //첫 번째 사진이 썸네일
+          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,);
         }
       }
       try {
-        res.status(200).send({ //정보 넘김
+        res.status(200).send({
             message: "검색결과",
             status: 'success',
             data: {
@@ -198,7 +184,7 @@ module.exports = {
                 result,
             }
         });
-    } catch (err) { //무언가 문제가 생김
+    } catch (err) {
         res.send({
             message: "ERROR",
             status: 'fail'
@@ -207,24 +193,18 @@ module.exports = {
     }
   },
   categorySearch: async (req, res) => {
-    //검색 로직 작성
-    //이메일로 작성기록 검색.
-    console.log("검색어");
-    //body의 search_word로 온다.
     const category = req.query.category;
     let result = await board.findAll({
       where: {
         category : category
       }
     })
-
     if(result.length == 0){
       res.status(202).send("검색 결과가 없거나 검색에 실패하였습니다.")
     }
     else{
-      //파일 이름 붙이기
       for(let i=0; i<result.length; i++){
-        let filepath = await photo.findAll({ //filepath = 게시물에 해당하는 이미지들
+        let filepath = await photo.findAll({
           where: {
             boardid : result[i].id
           }
@@ -235,11 +215,11 @@ module.exports = {
         }
         else{
           console.log('이미지 찾는중')
-          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,); //첫 번째 사진이 썸네일
+          result[i].dataValues.thumbnail = filepath[0].dataValues.filepath.substring(14,);
         }
       }
       try {
-        res.status(200).send({ //정보 넘김
+        res.status(200).send({
             message: "검색결과",
             status: 'success',
             data: {
@@ -247,7 +227,7 @@ module.exports = {
                 result,
             }
         });
-    } catch (err) { //무언가 문제가 생김
+    } catch (err) {
         res.send({
             message: "ERROR",
             status: 'fail'
