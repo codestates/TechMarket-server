@@ -1,8 +1,8 @@
 const { board } = require("../../models"); 
 const { comment } = require("../../models")
+const { photo } = require("../../models")
 
-//const jwt = require('jsonwebtoken'); //토큰 관련
-//const refreshToken = jwt.sign({}, process.env.REFRESH_SECRET, { expiresIn: '14d', issuer: 'cotak' }); //토큰관련
+const fs = require('fs');
 
 
 module.exports = {
@@ -36,23 +36,39 @@ module.exports = {
   deleteController: async (req, res) => {
     //글 삭제하는 로직 작성
     //로그인후 writerid가 맞다면 삭제가능
-    //글 제목으로 db에서 글을 찾아 삭제합니다.
-    //글 번호를 이용하는 방법 고려.
-    if(req.body.writerid){
+    //글 번호으로 db에서 글을 찾아 삭제합니다.
+    if(req.body.id){
       const boardcontent = await board.findOne({
-        where: { writerid : req.body.writerid, title: req.body.title },
+        where: { id : req.body.id },
       });
+      const photocontent = await photo.findAll({
+        where: { boardid : id }
+      })
+      const commentcontent = await comment.findAll({
+        where : { boardid : id }
+      })
+
+      if(photocontent){ //서버 컴퓨터의 사진데이터 삭제
+        for(let i = 0; i<photocontent.length; i++){
+          fs.unlink(`../../${photocontent[i].filepath}`)
+        }
+        photocontent.destroy(); //photo 데이터 베이스 삭제
+      }
+
+      if(commentcontent){
+        commentcontent.destroy(); //댓글 데이터 베이스 삭제
+      }
 
       if(boardcontent){
         boardcontent.destroy();
         res.status(200).send("삭제 완료");
       }
       else{
-        res.status(500).send( "바디를 한 번 더 확인하세요" );
+        res.status(403).send( "바디를 한 번 더 확인하세요" );
       }
     }
     else{
-      res.status(500).send( "body에 writerid가 없습니다" );
+      res.status(400).send( "body에 게시물번호가 없습니다" );
     }
   },
   createComment: async (req, res) => {
@@ -69,27 +85,21 @@ module.exports = {
     else{
       const newComment = await comment.create({ username: req.body.username, password : req.body.password, content: req.body.content, boardid : req.body.boardid});
       res.status(200).send(newComment);
+      console.log(newComment)
     }
   },
+
   deleteComment: async (req, res) => {
-    //댓글 지우기
-    //댓글의 id를 받아와 password가 맞는지 확인하고 지운다.
-    
+    //댓글 지우기 
     const commentcontent = await comment.findOne({ where : { id : req.body.id } });
     if(!commentcontent){
       res.status(500).send("잘못된 댓글 아이디/없는 아이디입니다.")
     }
     else{
-      if(commentcontent.password === req.body.password){
-        commentcontent.delete();
-        res.status(200).send("정상적으로 댓글이 삭제되었습니다.");
-      }
-      else{
-        res.status(304).send("비밀번호가 다릅니다.");
-      }
+      commentcontent.destroy();
+      res.status(200).send("정상적으로 댓글이 삭제되었습니다.");
     }
   },
-
 
 };
 
