@@ -48,7 +48,7 @@ app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage)
 app.post("/comment/create", boardcontroller.createComment);    //댓글 작성하기
 app.post("/comment/delete", boardcontroller.deleteComment);    //댓글 삭제하기
 
-//
+
 app.get("/search", searchcontroller.searchController ); //글 검색
 app.get("/products", searchcontroller.showAllboard);    //전체 글 목록 불러오기(사진 제외)
 app.get("/board", searchcontroller.showOneboard);       //게시물 하나 조회
@@ -62,41 +62,6 @@ app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');
 });
 
-
 app.listen(port, () => {
   console.log(`서버가 ${port}번에서 작동중입니다.`);
 });
-
- /*
-https
-  .createServer(
-    {
-      key: fs.readFileSync('./key.pem', 'utf-8'),
-      cert: fs.readFileSync('./cert.pem', 'utf-8'),
-    },
-    app)
-  .listen(3001);
-*/
-  /*
-app.listen(port, ()=>{
-  console.log(`서버가 ${port}번에서 작동중입니다.`);
-})
-//이걸로도 https 프로토콜 전송이 안되면 다시 변경
-/*
-let server;
-
-if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
-  server = https.createServer(
-      {
-        key: fs.readFileSync(__dirname + `/` + 'key.pem', 'utf-8'),
-        cert: fs.readFileSync(__dirname + `/` + 'cert.pem', 'utf-8'),
-      },
-      app
-    )
-    .listen(port);
-} else {
-  server = app.listen(port, ()=>{
-    console.log(`🔥 server listen in ${port} 🔥`);
-  })
-}
-*/
