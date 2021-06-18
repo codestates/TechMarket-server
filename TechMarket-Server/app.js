@@ -36,7 +36,6 @@ app.post("/mypage/upload", upload.array('photos') , imagecontroller.uploadImage)
 app.post("/comment/create", boardcontroller.createComment);
 app.post("/comment/delete", boardcontroller.deleteComment);
 
-//
 app.get("/search", searchcontroller.searchController );
 app.get("/products", searchcontroller.showAllboard);
 app.get("/board", searchcontroller.showOneboard);
@@ -47,6 +46,7 @@ app.get("/user/info", controllers.userInfoController);
 app.get('/', (req, res) => {
   res.status(201).send('Hello World 🇰🇷');
 });
+
 app.listen(port, () => {
   console.log(`서버가 ${port}번에서 작동중입니다.`);
 });

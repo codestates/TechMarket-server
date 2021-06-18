@@ -2,8 +2,6 @@ const { user } = require("../models");
 const jwt = require('jsonwebtoken');
 const { Op } = require("sequelize");
 
-
-
 module.exports = {
   logInController: async (req, res) => {
   try{
@@ -17,9 +15,6 @@ module.exports = {
       const token = jwt.sign({
         email: userInfo.email
       }, process.env.ACCESS_SECRET, { expiresIn: '1m' });
-      const refreshToken = jwt.sign({
-        email: userInfo.email
-      }, process.env.REFRESH_SECRET, { expiresIn: '1d' });
       let response = {  
         id: userInfo.id,
         username: userInfo.username,
@@ -43,7 +38,6 @@ module.exports = {
     try{
       let authorization = req.headers['authorization'];
       const tokenCheck = authorization.split(' ')[1];
-      console.log("tokenCheck : " + tokenCheck)
       const data = jwt.verify(tokenCheck, process.env.ACCESS_SECRET, {ignoreExpiration: true});
       if(!req.headers['authorization']){
         res.status(404).send("your account not exsist!!!")
@@ -90,7 +84,7 @@ module.exports = {
   },
   signOutController: (req, res) => {
     try{
-      res.status(200).json({result: { access_token: "" }}).send("See you next time!");
+      res.status(200).send("See you next time!");
     }
     catch(err){
     }
